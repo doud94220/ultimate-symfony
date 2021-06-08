@@ -2,47 +2,24 @@
 
 namespace App\Controller;
 
-use Twig\Environment;
-use App\Taxes\Calculator;
-use Cocur\Slugify\Slugify;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HelloController
+class HelloController extends AbstractController
 {
-    // protected $logger;
-
-    // public function __construct(LoggerInterface $logger)
-    // {
-    //     $this->logger = $logger;
-    // }
-
-    // protected $calculator;
-
-    // public function __construct(Calculator $calculator)
-    // {
-    //     $this->calculator = $calculator;
-    // }
-
     /**
      * @Route("/hello/{prenom?World}", name="hello", methods={"GET"}, host="localhost", schemes={"http", "https"})
      */
-    public function hello($prenom, LoggerInterface $logger, Calculator $calculator, Slugify $slugify, Environment $twig)
+    public function hello($prenom)
     {
-        dump($twig);
+        return $this->render("hello.html.twig", ['prenom' => $prenom]);
+    }
 
-        //$slugify = new Slugify();
-        dump($slugify->slugify("Hello World"));
-
-        //$this->logger->error("Message erreur doud");
-        $logger->error("message erreur doud");
-
-        //$tva = $this->calculator->calcul(100);
-        $tva = $calculator->calcul(100);
-        dump($tva);
-
-        return new Response("Hello $prenom");
+    /**
+     * @Route("/example", name="example")
+     */
+    public function example()
+    {
+        return $this->render("example.html.twig", ['age' => 33]);
     }
 }
