@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-	Accueil
+	Accueil à la racine du site
 {% endblock %}
 
 {% block body %}
@@ -16,12 +16,12 @@
 							({{ p.price / 100 }}
 							&euro;)
 						</h4>
-						<span class="badge badge-info">
+						<span class="badge badge-info bg-info">
 							{{ p.category.name }}
 						</span>
 						<p class="card-text">{{ p.shortDescription }}</p>
-						<a href="#" class="btn btn-primary btn-sm">Détails</a>
-						<a href="" class="btn btn-success btn-sm">Ajouter</a>
+						<a href="{{ path('product_show', { 'category_slug':p.category.slug, 'slug':p.slug}) }}" class="btn btn-primary btn-sm">Détails</a>
+						<a href="#" class="btn btn-success btn-sm">Ajouter</a>
 					</div>
 				</div>
 			</div>
