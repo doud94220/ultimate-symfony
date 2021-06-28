@@ -74,6 +74,7 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            dd($form->getData());
             //$product = $form->getData(); //On peut l'enlever
             $em->flush(); //pas besoin du persist => un peu bizarre
 
