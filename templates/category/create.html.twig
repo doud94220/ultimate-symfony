@@ -6,7 +6,8 @@
 
 {% block body %}
 	<h1>Création d'une nouvelle catégorie</h1>
-	{{ form_start(formView) }}
+	{# Le novalidate dessous permet de dire au navigateur de ne pas valider ce champ car on va le faire avec les contraintes au niveau de l'Entité (Category) #}
+	{{ form_start(formView, {'attr' : {'novalidate': 'novalidate'}}) }}
 	{# {{ form_widget(formView) }} #}
 	<div class="row">
 		{{ form_row(formView.name) }}

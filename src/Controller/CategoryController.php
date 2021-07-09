@@ -14,13 +14,31 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CategoryController extends AbstractController
 {
+    protected $categoryRepository;
+
+    public function __construct(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+    }
+
+    public function RenderMenuList()
+    {
+        //1. Aller chercher toutes les catégories dans la BDD (Repository)
+        $categories = $this->categoryRepository->findAll();
+
+        //2. Renvoyer le contenu HTML sous la forme d'une Response ($this->render)
+        return $this->render('category/_menu.html.twig', [
+            'categories' => $categories
+        ]);
+    }
+
     /**
      * @Route("/", name="category_home")
      */
-    public function home()
-    {
-        return $this->render('category/index.html.twig');
-    }
+    // public function home()
+    // {
+    //     return $this->render('category/index.html.twig');
+    // }
 
     /**
      * @Route("/admin/category/create", name="category_create")
@@ -31,7 +49,7 @@ class CategoryController extends AbstractController
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $category->setSlug(strtolower($slugger->slug($category->getName())));
             $em->persist($category);
             $em->flush();
@@ -57,7 +75,7 @@ class CategoryController extends AbstractController
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $category->setSlug(strtolower($slugger->slug($category->getName())));
             $em->flush();
 
