@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 //use App\Repository\ProductRepository;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -57,6 +59,22 @@ class Product
      * @Assert\Length(min=20, minMessage="La description courte doit quand même faire au moins 20 caractères")
      */
     private $shortDescription;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PurchaseItem::class, mappedBy="product")
+     */
+    private $purchaseItems;
+
+    // /**
+    //  * @ORM\ManyToMany(targetEntity=Purchase::class, mappedBy="products")
+    //  */
+    //private $purchases;
+
+    public function __construct()
+    {
+        //$this->purchases = new ArrayCollection();
+        $this->purchaseItems = new ArrayCollection();
+    }
 
     // public static function loadValidatorMetadata(ClassMetadata $metadata)
     // {
@@ -145,6 +163,63 @@ class Product
     public function setShortDescription(?string $shortDescription): self
     {
         $this->shortDescription = $shortDescription;
+
+        return $this;
+    }
+
+    // /**
+    //  * @return Collection|Purchase[]
+    //  */
+    // public function getPurchases(): Collection
+    // {
+    //     return $this->purchases;
+    // }
+
+    // public function addPurchase(Purchase $purchase): self
+    // {
+    //     if (!$this->purchases->contains($purchase)) {
+    //         $this->purchases[] = $purchase;
+    //         $purchase->addProduct($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removePurchase(Purchase $purchase): self
+    // {
+    //     if ($this->purchases->removeElement($purchase)) {
+    //         $purchase->removeProduct($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    /**
+     * @return Collection|PurchaseItem[]
+     */
+    public function getPurchaseItems(): Collection
+    {
+        return $this->purchaseItems;
+    }
+
+    public function addPurchaseItem(PurchaseItem $purchaseItem): self
+    {
+        if (!$this->purchaseItems->contains($purchaseItem)) {
+            $this->purchaseItems[] = $purchaseItem;
+            $purchaseItem->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchaseItem(PurchaseItem $purchaseItem): self
+    {
+        if ($this->purchaseItems->removeElement($purchaseItem)) {
+            // set the owning side to null (unless already changed)
+            if ($purchaseItem->getProduct() === $this) {
+                $purchaseItem->setProduct(null);
+            }
+        }
 
         return $this;
     }
