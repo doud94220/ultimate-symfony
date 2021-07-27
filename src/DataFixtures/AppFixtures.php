@@ -62,8 +62,8 @@ class AppFixtures extends Fixture
 
         for ($c = 0; $c < 3; $c++) {
             $category = new Category;
-            $category->setName($faker->department()) //faut mbezhanov
-                ->setSlug(strtolower($this->slugger->slug($category->getName())));
+            $category->setName($faker->department()); //faut mbezhanov
+            //->setSlug(strtolower($this->slugger->slug($category->getName()))); //On va le faire dans le Listener
 
             $manager->persist($category);
 
@@ -71,7 +71,7 @@ class AppFixtures extends Fixture
                 $product = new Product;
                 $product->setName($faker->productName()) //faut mbezhanov
                     ->setPrice($faker->price(4000, 20000)) //faut la class de Lior sur les faker prices
-                    ->setSlug(strtolower($this->slugger->slug($product->getName())))
+                    //->setSlug(strtolower($this->slugger->slug($product->getName()))) //On va le faire dans le Listener
                     ->setCategory($category)
                     ->setShortDescription($faker->paragraph()) //Faut php/faker je crois
                     ->setMainPicture($faker->imageUrl(400, 400, true)); //Faut PicsumPhotosProvider

@@ -24,9 +24,10 @@ class PurchasePersister
     public function storePurchase(Purchase $purchase)
     {
 
-        $purchase->setUser($this->security->getUser())
-            ->setPurchasedAt(new \DateTime()) //Syntaxe pas comme le prof, j'ai trouvé ça sur le net (backslash avant DateTime)
-            ->setTotal($this->cartService->getTotal());
+        $purchase->setUser($this->security->getUser());
+        // ON VA FAIRE LES 2 ACTIONS DES 2 DESSOUS DANS le Purchase.php
+        //->setPurchasedAt(new \DateTime()) //Syntaxe pas comme le prof, j'ai trouvé ça sur le net (backslash avant DateTime)
+        //->setTotal($this->cartService->getTotal());
 
         $this->em->persist($purchase);
 
@@ -38,6 +39,9 @@ class PurchasePersister
                 ->setQuantity($cartItem->qty)
                 ->setTotal($cartItem->getTotal())
                 ->setProductPrice($cartItem->product->getPrice());
+
+            // ON VA LE FAIRE DANS LE setPurchase()
+            //$purchase->addPurchaseItem($purchaseItem);
 
             $this->em->persist($purchaseItem);
         }

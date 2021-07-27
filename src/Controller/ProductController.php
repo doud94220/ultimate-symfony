@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Entity\Category;
+use App\Event\ProductViewEvent;
 use App\Form\ProductType;
 use Doctrine\ORM\EntityManager;
 use App\Repository\ProductRepository;
@@ -26,6 +27,7 @@ use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProductController extends AbstractController
@@ -55,7 +57,7 @@ class ProductController extends AbstractController
     /**
      * @Route("/{category_slug}/{slug}", name="product_show", priority=-1)
      */
-    public function show($slug, ProductRepository $productRepository, Request $request, $prenom)
+    public function show($slug, ProductRepository $productRepository, Request $request, $prenom, EventDispatcherInterface $dispatcher)
     {
         $product = $productRepository->findOneBy([
             'slug' => $slug
@@ -64,6 +66,10 @@ class ProductController extends AbstractController
         if (!$product) {
             throw $this->createNotFoundException("Le produit demandé n'existe pas...");
         }
+
+        //Lancer un évènement qui permettra à l'administrateur de voir que qqn a regardé ce produit
+        $productEvent = new ProductViewEvent($product);
+        $dispatcher->dispatch($productEvent, 'product.view');
 
         return $this->render('product/show.html.twig', [
             'product' => $product
